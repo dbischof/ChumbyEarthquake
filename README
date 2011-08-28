@@ -1,0 +1,10 @@
+Earthquake Map
+For Chumby devices
+
+This widget was originally released on November 24, 2008.
+
+Plots earthquakes recorded by the USGS over the past day with a magnitude of 2.5 and above on a world map. The quakes are color coded by severity and can be clicked on for more details.
+
+http://www.chumby.com/guide/widget/Earthquake%20Map
+
+(Code was written in FlashDevelop.)
