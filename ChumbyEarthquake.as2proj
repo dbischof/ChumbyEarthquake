@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<project>
+<project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie disabled="False" />
+    <movie outputType="Application" />
     <movie input="" />
     <movie path="ChumbyEarthquake.swf" />
     <movie fps="21" />
     <movie width="320" />
     <movie height="240" />
     <movie version="8" />
+    <movie minorVersion="0" />
+    <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -37,12 +39,12 @@
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>
-    <asset path="library\map-small.png" />
-    <asset path="library\scale.png" />
+    <asset path="library\map-small.png" bitmap="False" />
+    <asset path="library\scale.png" bitmap="False" />
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
@@ -51,6 +53,9 @@
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="True" />
-    <option testMovie="Default" />
+    <option testMovie="NewTab" />
+    <option testMovieCommand="" />
   </options>
+  <!-- Plugin storage -->
+  <storage />
 </project>

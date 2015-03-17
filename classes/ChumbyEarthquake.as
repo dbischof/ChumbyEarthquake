@@ -1,6 +1,6 @@
 class ChumbyEarthquake {
 
-	private static var feedUrl:String = "http://earthquake.usgs.gov/eqcenter/catalogs/eqs1day-M2.5.xml";
+	private static var feedUrl:String = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom";
 	
 	private static var scaleColors:Array = new Array(0xFFFFFF, 0xFFFFFF, 0x4CC900, 0x4CC900, 0xFFD800, 0xFF6A00, 0xFF7FED, 0xB200FF, 0xFF0000, 0xFF0000, 0x4800FF);
 	private static var scaleLabels:Array = new Array("Micro", "Micro", "Minor", "Minor", "Light", "Moderate", "Strong", "Major", "Great", "Great", "Epic");
@@ -260,7 +260,7 @@ class ChumbyEarthquake {
 			quakeDate.autoSize = "center";
 			quakeDate.wordWrap = true;
 		}
-		var index:Number = quake.description.indexOf(",");
+		var index:Number = quake.description.indexOf(" -");
 		quakeBox.quakeMagnitude.text = quake.description.substring(0, index);
 		
 		
@@ -328,7 +328,7 @@ class ChumbyEarthquake {
 					_root.loading.text = "Loading failed; try again later.";
 			}
 			else {
-				trace("Connection failure");
+				//trace("Connection failure");
 				if (_root.loading._visible)
 					_root.loading.text = "No connection; try again later.";
 			}
@@ -342,15 +342,15 @@ class ChumbyEarthquake {
 		var quakes:Array = new Array();
 		
 		//trace(xml);
-		var parentNode:XMLNode = xml.firstChild.firstChild;	// rss -> channel
+		var parentNode:XMLNode = xml.firstChild;	// feed
 		
 		for (var i:Number = 0; i < parentNode.childNodes.length; i++) {
 			var itemNode:XMLNode = parentNode.childNodes[i];
 			
-			if (itemNode.nodeName != "item")
+			if (itemNode.nodeName != "entry")
 				continue;
 			
-			quakes.push(parseQuake(itemNode.firstChild));
+			quakes.push(parseQuake(itemNode));
 		}
 		
 		if (quakes.length != 0) {
@@ -369,8 +369,10 @@ class ChumbyEarthquake {
 	}
 	
 	private static function getURL() {
-		var random:Number = Math.floor(Math.random() * 100);
-		return feedUrl + "?r=" + random;
+		// Server no longer supports query string to defeat caching (throws 403 Forbidden)
+		//var random:Number = Math.floor(Math.random() * 100);
+		//return feedUrl + "?r=" + random;
+		return feedUrl;
 	}
 	
 	private static function parseQuake(node:XMLNode):ChumbyEarthquakeEvent {
@@ -379,18 +381,22 @@ class ChumbyEarthquake {
 		var lat:Number;
 		var long:Number;
 		
+		node = node.firstChild;
+		
 		while (node != null) {
 			if (node.nodeName == "title") {
 				description = node.firstChild.toString();
 			}
-			else if (node.nodeName == "description") {
-				date = node.firstChild.toString();
+			else if (node.nodeName == "summary") {
+				var cdata:String = node.firstChild.nodeValue;
+				var pieces:Array = cdata.split("<dt>Time</dt><dd>");
+				pieces = pieces[1].split("</dd>");
+				date = pieces[0];
 			}
-			else if (node.nodeName == "geo:lat") {
-				lat = Number(node.firstChild.toString());
-			}
-			else if (node.nodeName == "geo:long") {
-				long = Number(node.firstChild.toString());
+			else if (node.nodeName == "georss:point") {
+				var point:Array = node.firstChild.toString().split(" ");
+				lat = Number(point[0]);
+				long = Number(point[1]);
 			}
 			
 			//trace(node.nodeName + " " + node.firstChild);

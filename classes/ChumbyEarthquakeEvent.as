@@ -12,7 +12,7 @@
 		eventLat = lat;
 		eventLong = long;
 		
-		eventMagnitude = Number(eventDescription.substring(2, eventDescription.indexOf(",", 2)));
+		eventMagnitude = Number(eventDescription.substring(2, eventDescription.indexOf(" -", 2)));
 	}
 	
 	public function get description():String {
